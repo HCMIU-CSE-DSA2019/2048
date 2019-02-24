@@ -1,6 +1,6 @@
 //Board size
-var width = 5;
-var height = 3;
+var width = 4;
+var height = 7;
 var size = width * height;
 
 //Increment value
@@ -63,8 +63,7 @@ function addBlock(){
         addBlock();
         return;
     }
-    else{
-        //After finding X, Y then we set the value of 2D element (with X, Y) to the same value of 1D element
+    else {
         block2D[randomY][randomX] = blockIncrement;    
         //console.log("PASSED");
     } 
@@ -137,24 +136,26 @@ function mergeLeft(){
     printBoardSimple();
 }
 
-//RIGHT UP DOWN control is under construction
 function moveRight(){
     //Merging block first, pushing later
-    //mergeRight();
+    mergeRight();
 
     for (var i = height - 1; i >= 0; i--){
         for (var j = width - 1; j >= 0; j--){
             if (block2D[i][j] == 0){
-                if (j == width - 1){
+                if (j == 0){ //???
                     continue; //Skip value 0 at the last element
                 }
                 else{ //Move each element to the left
-                    block2D[i][j] = block2D[i][j + 1];
-                    block2D[i][j + 1] = 0;
+                    block2D[i][j] = block2D[i][j -1];
+                    block2D[i][j - 1] = 0;
                 }
             }
         }
     }
+
+    process.stdout.write("Move block: \n");
+    printBoardSimple();
 }
 
 function mergeRight(){
@@ -176,6 +177,51 @@ function mergeRight(){
     printBoardSimple();
 }
 
+//UP DOWN control is under construction
+function moveUp(){
+    //Merging block first, pushing later
+    mergeUp();
+
+    for (var j = 0; j < width; j++){
+        for (var i = 0; i < height; i++){
+            if (block2D[i][j] == 0){
+                if (i == height - 1){
+                    continue; //Skip value 0 at the last element
+                }
+                else{ //Move each element to the left
+                    block2D[i][j] = block2D[i + 1][j];
+                    block2D[i + 1][j] = 0;
+                }
+            }
+        }
+    }
+
+    process.stdout.write("Move block: \n");
+    printBoardSimple();
+}
+
+//Bug + error
+function mergeUp(){
+    for (var j = 0; j < width; j++){
+        for (var i = 0; i < height; i++){
+            //console.log("[" + i + "]" + "[" + j + "]" + block2D[i][j] + "\t\t" + "[" + (i + 1) + "]" + "[" + j + "]" + block2D[i + 1][j] + "\t\t");
+
+            //Check the next block is equal to current block or not
+            if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i + 1][j])){ //Bug here
+
+                //Merge value to the left
+                block2D[i][j] += block2D[i + 1][j];
+
+                //Delete the right hand side block
+                block2D[i + 1][j] = 0;
+            }   
+        }
+    }
+    process.stdout.write("Merge block: \n");
+    printBoardSimple();
+    
+}
+
 reset();
 console.log("\nIteration 0------------------------------------------");
 printBoardSimple();
@@ -185,12 +231,13 @@ for (var i = 1; i <= 100; i++){
     console.log("\nIteration " + i + "------------------------------------------");
     process.stdout.write("Game cannot move anymore? " + isFullBlock() + "\n");
     addBlock();
-    //moveLeft();
-    mergeRight();
+    //moveLeft(); //Test OK
+    //moveRight(); //Test OK
+    mergeUp(); //BUG
+    //moveUp();
 }
 
 /*
-//Testing this SHIT output to HMTL
 // function myFunction() {
 //     document.getElementById("demo").innerHTML = "asdsd";
 // }

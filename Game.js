@@ -1,6 +1,6 @@
 //Board size
 var width = 4;
-var height = 7;
+var height = 4;
 var size = width * height;
 
 //Increment value
@@ -50,6 +50,7 @@ function printBoardSimple(){
             }
         }
     }
+    console.log();
 }
 
 //Add random block
@@ -94,35 +95,32 @@ function isDuplicateBlock(x, y){
     return block2D[y][x] != 0;
 }
 
+//Bug: move all blocks by 1 unit instead of moving all to the edge.
 function moveLeft(){
+    var i = 0, j = 0;
+    console.log("Move left:");
+    
     //Merging block first, pushing later
-    mergeLeft();
-
-    for (var i = 0; i < height; i++){
-        for (var j = 0; j < width; j++){
-            if (block2D[i][j] == 0){
-                if (j == width - 1){
-                    continue; //Skip value 0 at the last element
-                }
-                else{ //Move each element to the left
+    for (i = 0; i < height; i++){
+        //for (var temp = 0; temp < width - 1; temp++){ //This line will repeat the moving block until all blocks are moved to the very left
+            for (j = 0; j < width - 1; j++){
+                if (block2D[i][j] == 0){ //Skip value 0 at the last element              
                     block2D[i][j] = block2D[i][j + 1];
                     block2D[i][j + 1] = 0;
                 }
             }
-        }
+        //}
     }
-
-    process.stdout.write("Move block: \n");
+    //process.stdout.write("Move block: \n");
     printBoardSimple();
+    addBlock();
 }
 
 function mergeLeft(){
     for (var i = 0; i < height; i++){
-        for (var j = 0; j < width; j++){
-
+        for (var j = 0; j < width - 1; j++){
             //Check the next block is equal to current block or not
             if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i][j + 1])){ 
-
                 //Merge value to the left
                 block2D[i][j] += block2D[i][j + 1];
 
@@ -131,31 +129,28 @@ function mergeLeft(){
             }   
         }
     }
-
-    process.stdout.write("Merge block: \n");
-    printBoardSimple();
+    
+    //process.stdout.write("Merge block: \n");
+    //printBoardSimple();
 }
 
 function moveRight(){
+    console.log("Move right:");
     //Merging block first, pushing later
     mergeRight();
 
     for (var i = height - 1; i >= 0; i--){
-        for (var j = width - 1; j >= 0; j--){
-            if (block2D[i][j] == 0){
-                if (j == 0){ //???
-                    continue; //Skip value 0 at the last element
-                }
-                else{ //Move each element to the left
-                    block2D[i][j] = block2D[i][j -1];
-                    block2D[i][j - 1] = 0;
-                }
+        for (var j = width - 1; j > 0; j--){
+            if (block2D[i][j] == 0){ //Skip value 0 at the last element
+                block2D[i][j] = block2D[i][j -1];
+                block2D[i][j - 1] = 0;
             }
         }
     }
 
-    process.stdout.write("Move block: \n");
+    //process.stdout.write("Move block: \n");
     printBoardSimple();
+    addBlock();
 }
 
 function mergeRight(){
@@ -163,7 +158,6 @@ function mergeRight(){
         for (var j = width - 1; j >= 0; j--){
             //Check the next block is equal to current block or not
             if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i][j - 1])){ 
-
                 //Merge value to the left
                 block2D[i][j] += block2D[i][j - 1];
 
@@ -173,73 +167,91 @@ function mergeRight(){
         }
     }
 
-    process.stdout.write("Merge block: \n");
-    printBoardSimple();
+    //process.stdout.write("Merge block: \n");
+    //printBoardSimple();
 }
 
-//UP DOWN control is under construction
 function moveUp(){
+    console.log("Move up:");
     //Merging block first, pushing later
     mergeUp();
-
-    for (var j = 0; j < width; j++){
-        for (var i = 0; i < height; i++){
-            if (block2D[i][j] == 0){
-                if (i == height - 1){
-                    continue; //Skip value 0 at the last element
-                }
-                else{ //Move each element to the left
-                    block2D[i][j] = block2D[i + 1][j];
-                    block2D[i + 1][j] = 0;
-                }
+    for (var i = 0; i < height - 1; i++){
+        for (var j = 0; j < width; j++){
+            if (block2D[i][j] == 0){ //Skip value 0 at the last element      
+                block2D[i][j] = block2D[i + 1][j];
+                block2D[i + 1][j] = 0
             }
         }
     }
 
-    process.stdout.write("Move block: \n");
+    //process.stdout.write("Move block: \n");
     printBoardSimple();
+    addBlock();
 }
 
-//Bug + error
 function mergeUp(){
-    for (var j = 0; j < width; j++){
-        for (var i = 0; i < height; i++){
-            //console.log("[" + i + "]" + "[" + j + "]" + block2D[i][j] + "\t\t" + "[" + (i + 1) + "]" + "[" + j + "]" + block2D[i + 1][j] + "\t\t");
-
+    for (var i = 0; i < height; i++){
+        for (var j = 0; j < width; j++){
             //Check the next block is equal to current block or not
-            if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i + 1][j])){ //Bug here
+            if ((block2D[i][j] != 0)  && (i != height - 1)){ //Bug fixed: out of array's range
+                if (block2D[i][j] == block2D[i + 1][j]){
+                    //Merge value to the left
+                    block2D[i][j] += block2D[i + 1][j];
 
-                //Merge value to the left
-                block2D[i][j] += block2D[i + 1][j];
-
-                //Delete the right hand side block
-                block2D[i + 1][j] = 0;
+                    //Delete the right hand side block
+                    block2D[i + 1][j] = 0;
+                }      
             }   
         }
     }
-    process.stdout.write("Merge block: \n");
+    //process.stdout.write("Merge block: \n");
+    //printBoardSimple();
+}
+
+function moveDown(){
+    console.log("Move down:");
+    //Merging block first, pushing later
+    mergeDown();
+    for (var i = height - 1; i >= 1; i--){
+        for (var j = width - 1; j >= 0; j--){
+            if (block2D[i][j] == 0){ //Skip value 0 at the last element      
+                block2D[i][j] = block2D[i - 1][j];
+                block2D[i - 1][j] = 0;
+            }
+        }
+    }
+
+    //process.stdout.write("Move block: \n");
     printBoardSimple();
-    
+    addBlock();
+}
+
+function mergeDown(){
+    for (var i = height - 1; i >= 1; i--){
+        for (var j = width - 1; j >= 0; j--){
+            //Check the next block is equal to current block or not
+            if (block2D[i][j] != 0){
+                if (block2D[i][j] == block2D[i - 1][j]){
+                    block2D[i][j] += block2D[i - 1][j];  
+                    block2D[i - 1][j] = 0;
+                }      
+            }   
+        }
+    }
+    //process.stdout.write("Merge block: \n");
+    //printBoardSimple();
 }
 
 reset();
 console.log("\nIteration 0------------------------------------------");
-printBoardSimple();
+addBlock();
 
 //Testing game
-for (var i = 1; i <= 100; i++){
+for (var i = 1; i <= 1024; i++){
     console.log("\nIteration " + i + "------------------------------------------");
-    process.stdout.write("Game cannot move anymore? " + isFullBlock() + "\n");
-    addBlock();
-    //moveLeft(); //Test OK
-    //moveRight(); //Test OK
-    mergeUp(); //BUG
-    //moveUp();
+    //process.stdout.write("Game cannot move anymore? " + isFullBlock() + "\n");
+    //moveDown();
+    //moveRight();
+    //moveDown();
+    moveLeft();
 }
-
-/*
-// function myFunction() {
-//     document.getElementById("demo").innerHTML = "asdsd";
-// }
-// myFunction();
-*/

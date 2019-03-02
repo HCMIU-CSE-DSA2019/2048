@@ -1,5 +1,5 @@
 //Board size
-var width = 4;
+var width = 10;
 var height = 4;
 var size = width * height;
 
@@ -44,7 +44,12 @@ function printBoard2D(){
 function printBoardSimple(){
     for (var i = 0; i < height; i++){
         for (var j = 0; j < width; j++){
-            process.stdout.write(block2D[i][j] + "\t\t");
+            if (block2D[i][j] == 0){
+                process.stdout.write("-\t\t");
+            }
+            else {
+                process.stdout.write(block2D[i][j] + "\t\t");
+            }
             if (j == (width - 1)){ //Print next line
                 console.log();
             }
@@ -98,35 +103,47 @@ function isDuplicateBlock(x, y){
 //Bug: move all blocks by 1 unit instead of moving all to the edge.
 function moveLeft(){
     var i = 0, j = 0;
-    console.log("Move left:");
     
+    mergeLeft();
     //Merging block first, pushing later
     for (i = 0; i < height; i++){
-        //for (var temp = 0; temp < width - 1; temp++){ //This line will repeat the moving block until all blocks are moved to the very left
+        for (var temp = 0; temp < width - 1; temp++){ //This line will repeat the moving block until all blocks are moved to the very left
             for (j = 0; j < width - 1; j++){
                 if (block2D[i][j] == 0){ //Skip value 0 at the last element              
                     block2D[i][j] = block2D[i][j + 1];
                     block2D[i][j + 1] = 0;
                 }
             }
-        //}
+        }
     }
-    //process.stdout.write("Move block: \n");
+    console.log("Move left:");
     printBoardSimple();
     addBlock();
 }
 
 function mergeLeft(){
+    var marked = 0;
     for (var i = 0; i < height; i++){
-        for (var j = 0; j < width - 1; j++){
-            //Check the next block is equal to current block or not
-            if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i][j + 1])){ 
-                //Merge value to the left
-                block2D[i][j] += block2D[i][j + 1];
+        for (var j = 0; (j < width - 1) && (block2D[i][j] != 0); j++){
+            //Apply selection sort
+            marked = j;
+            for (var k = marked + 1; k < width; k++){
+                //If the pair of block has different value, switch to the next pair
+                if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])){
+                    //console.log("Different value " + marked + "      " + k);
+                    marked = k;
+                }
+                //If same, merge value to the left
+                else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])){
+                    //console.log("Same value " + marked + "      " + k);
+                    block2D[i][marked] += block2D[i][k];
 
-                //Delete the right hand side block
-                block2D[i][j + 1] = 0;
-            }   
+                    //Delete the right hand side block
+                    block2D[i][k] = 0;
+                    j = k;
+                    break;
+                }
+            }              
         }
     }
     
@@ -140,10 +157,12 @@ function moveRight(){
     mergeRight();
 
     for (var i = height - 1; i >= 0; i--){
-        for (var j = width - 1; j > 0; j--){
-            if (block2D[i][j] == 0){ //Skip value 0 at the last element
-                block2D[i][j] = block2D[i][j -1];
-                block2D[i][j - 1] = 0;
+        for (var temp = width - 1; temp >= 0; temp--){
+            for (var j = width - 1; j > 0; j--){
+                if (block2D[i][j] == 0){ //Skip value 0 at the last element
+                    block2D[i][j] = block2D[i][j -1];
+                    block2D[i][j - 1] = 0;
+                }
             }
         }
     }
@@ -155,7 +174,7 @@ function moveRight(){
 
 function mergeRight(){
     for (var i = height - 1; i >= 0; i--){
-        for (var j = width - 1; j >= 0; j--){
+        for (var j = width - 1; (j >= 0) && (block2D[i][j] != 0); j--){
             //Check the next block is equal to current block or not
             if ((block2D[i][j] != 0) && (block2D[i][j] == block2D[i][j - 1])){ 
                 //Merge value to the left
@@ -164,6 +183,26 @@ function mergeRight(){
                 //Delete the right hand side block
                 block2D[i][j - 1] = 0;
             }   
+
+            //Apply selection sort
+            // marked = j;
+            // for (var k = marked - 1; k >= 0; k--){
+            //     //If the pair of block has different value, switch to the next pair
+            //     if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])){
+            //         //console.log("Different value " + marked + "      " + k);
+            //         marked = k;
+            //     }
+            //     //If same, merge value to the left
+            //     else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])){
+            //         //console.log("Same value " + marked + "      " + k);
+            //         block2D[i][marked] += block2D[i][k];
+
+            //         //Delete the right hand side block
+            //         block2D[i][k] = 0;
+            //         j = k;
+            //         break;
+            //     }
+            // }    
         }
     }
 
@@ -244,10 +283,17 @@ function mergeDown(){
 
 reset();
 console.log("\nIteration 0------------------------------------------");
-addBlock();
+//addBlock();
+
+block2D[0][0] = 2;
+block2D[0][2] = 4;
+block2D[0][4] = 2;
+block2D[0][6] = 2;
+block2D[0][8] = 2;
+printBoardSimple();
 
 //Testing game
-for (var i = 1; i <= 1024; i++){
+for (var i = 1; i <= 100; i++){
     console.log("\nIteration " + i + "------------------------------------------");
     //process.stdout.write("Game cannot move anymore? " + isFullBlock() + "\n");
     //moveDown();

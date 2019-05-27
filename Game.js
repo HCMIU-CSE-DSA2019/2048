@@ -9,6 +9,12 @@ var blockIncrement = 2;
 var stepCount = 0;
 var totalPoint = 0;
 
+var undoStack = new Array();  
+var redoStack = new Array();  
+
+undoStack.push();
+undoStack.pop();
+
 // Create an 2D array
 var block2D = new Array(height);             
 for(var i = 0; i < height; i++){

@@ -16,7 +16,7 @@ public class Screen {
     
     public static Screen getInstance()
     {
-        if (screen = null)
+        if (screen == null)
             screen = new Screen();
         return screen;
     }

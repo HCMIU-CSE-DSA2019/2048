@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    </head>
+            <body align="center" style="margin:50px">
+                    <h1>2048 Game on Web </h1>
+                    <canvas id="canvas" width="1000px" height="1000px" align="center" style="border:2px solid black; text-align=center"></canvas>
+                    </body>
+        <script>
+            canvas=document.getElementById("canvas");
+            ctx=canvas.getContext('2d');
+            
+var dis=[[0,0,0,0],[0,0,0,0],[0,0,2,0],[0,0,0,0]];
+var color=["gray","rgb(250,200,200)","rgb(240,200,160)","rgb(160,120,150)","cyan","blue","rgb(0,0,100)","rgb(0,200,0)","rgb(0,50,0)","rgb(150,100,50)","rgb(100,150,50)","rgb(200,0,0)"];
+function display(){
+
+console.log(dis);
+
+for(var j=0;j<4;j++)
+for(var i=0;i<4;i++)
+{
+
+//color to be decided by dis[i][j]
+if(dis[i][j]!=0)
+ctx.fillStyle=color[Math.log2(dis[i][j])];
+else{
+ctx.fillStyle="rgb(230,230,230)";}
+ctx.fillRect(i*100+2,j*100+2,96,96);
+
+if(dis[i][j]!=0){
+ctx.font = "20px Comic Sans MS";
+ctx.fillStyle = "black";
+ctx.textAlign = "center";
+ctx.fillText(dis[i][j], i*100+50,j*100+60); 
+}
+
+}
+
+}
+
+            var count = 0
+
+            window.addEventListener("keyup", checkKeyPressed, false);
+
+            function checkKeyPressed(e) {
+                if (e.keyCode == 65) {
+                    // alert("asdasd")
+                    console.log("LEFT")
+                }
+                switch (e.keyCode) {
+                    case 65:
+                    case 37: {
+                        console.log("LEFT")
+                        moveLeft()
+                        break
+                    }
+                    case 68:
+                    case 39: {
+                        console.log("RIGHT")
+                        moveRight()
+                        break
+                    }
+                    case 87:
+                    case 38: {
+                        console.log("UP")
+                        moveUp()
+                        break
+                    }
+                    case 83:
+                    case 40: {
+                        console.log("DOWN")
+                        moveDown()
+                        break
+                    }
+                }
+            }
+
+            function display() {
+                var htmlCode = ""
+                
+                for (let i = 0; i <= height - 1; i++) {
+                    htmlCode += "<tr>"
+                    for (let j = 0; j <= width - 1; j++) {
+                        htmlCode += ("<td>" + block2D[i][j] + "</td>")
+                    }
+                    htmlCode += "</tr>"
+                }
+                document.getElementById("gameDisplay").innerHTML = htmlCode
+            }
+
+            //Board size
+            var width = 4;
+            var height = 4;
+
+            //Increment value
+            var blockIncrement = 2;
+
+            //This feature will be added later
+            var stepCount = 0;
+            var totalPoint = 0;
+
+            // Create an 2D array
+            var block2D = new Array(height);
+            for (var i = 0; i < height; i++) {
+                block2D[i] = new Array(width);
+            }
+
+            //Another way to create 2D array
+            //var block2D = [...Array(height)].map(e => Array(width).fill(0));
+
+            //Initialize array with all element is set to 0
+            function reset() {
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0; j < width; j++) {
+                        block2D[i][j] = 0
+                    }
+                }
+                addBlock();
+                addBlock();
+                display()
+            }
+
+            //Print the 2D array, used to debug
+            function printBoard2D() {
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0; j < width; j++) {
+                        //process.stdout.write("[" + i + "]" + "[" + j + "]" + block2D[i][j] + "\t\t");
+                        if (j == (width - 1)) {
+                            console.log();
+                        }
+                    }
+                }
+            }
+
+            //Print the 2D array, mostly use this
+            function printBoardSimple() {
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0; j < width; j++) {
+                        if (block2D[i][j] == 0) {
+                            //process.stdout.write("-\t\t");
+                        } else {
+                            //process.stdout.write(block2D[i][j] + "\t\t");
+                        }
+                        if (j == (width - 1)) { //Print next line
+                            console.log();
+                        }
+                    }
+                }
+                console.log();
+            }
+
+            //Add random block
+            function addBlock() {
+                //Random from a specific range: (random * (max - min  + 1)) + min
+                var randomX = Math.floor((Math.random() * width) + 0); //Range from 0 to width size. Eg: width = 4: 0 to 3
+                var randomY = Math.floor((Math.random() * height) + 0);
+
+                if (isDuplicateBlock(randomX, randomY)) {
+                    //console.log("DUPLICATED, add again");
+                    addBlock();
+                    return;
+                } else {
+                    block2D[randomY][randomX] = blockIncrement;
+                    //console.log("PASSED");
+                }
+
+                //process.stdout.write("Add block: \n");
+                printBoardSimple();
+            }
+
+            //Lose condition
+            function isFullBlock() {
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0; j < width; j++) {
+                        if (block2D[i][j] == 0) { //Empty block
+                            return false;
+                        }
+                        if (block2D[i][j] == block2D[i][j + 1]) { //Duplicate horizontal
+                            return false;
+                        }
+                        if (block2D[i][j] == block2D[i + 1][j]) { //Duplicate vertical
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function isDuplicateBlock(x, y) {
+                return block2D[y][x] != 0;
+            }
+
+            //Bug: move all blocks by 1 unit instead of moving all to the edge.
+            function moveLeft() {
+                mergeLeft();
+                //Merging block first, pushing later
+                for (var i = 0; i < height; i++) {
+                    for (var temp = 0; temp < width - 1; temp++) { //This line will repeat the moving block until all blocks are moved to the very left
+                        for (var j = 0; j < width - 1; j++) {
+                            if (block2D[i][j] == 0) { //Skip value 0 at the last element              
+                                block2D[i][j] = block2D[i][j + 1];
+                                block2D[i][j + 1] = 0;
+                            }
+                        }
+                    }
+                }
+                console.log("Move left:");
+                printBoardSimple();
+                display();
+                addBlock();
+            }
+
+            function mergeLeft() {
+                for (var i = 0; i < height; i++) {
+                    for (var j = 0;
+                        (j < width - 1) && (block2D[i][j] != 0); j++) {
+                        //Apply selection sort
+                        var marked = j;
+                        for (var k = marked + 1; k < width; k++) {
+                            //If the pair of block has different value, switch to the next pair
+                            if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])) {
+                                marked = k;
+                            }
+                            //If same, merge value to the left
+                            else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
+                                block2D[i][marked] += block2D[i][k];
+
+                                //Delete the right hand side block and move to the next pair
+                                block2D[i][k] = 0;
+                                j = k;
+                                break;
+                            }
+                        }
+                    }
+                }
+                // process.stdout.write("Merge block: \n");
+                //printBoardSimple();
+            }
+
+            function moveRight() {
+                //Merging block first, pushing later
+                mergeRight();
+
+                for (var i = height - 1; i >= 0; i--) {
+                    for (var temp = width - 1; temp > 0; temp--) {
+                        for (var j = width - 1; j > 0; j--) {
+                            if (block2D[i][j] == 0) { //Skip value 0 at the last element
+                                block2D[i][j] = block2D[i][j - 1];
+                                block2D[i][j - 1] = 0;
+                            }
+                        }
+                    }
+                }
+                console.log("Move right:");
+                printBoardSimple();
+                display();
+                addBlock();
+            }
+
+            function mergeRight() {
+                for (var i = height - 1; i >= 0; i--) {
+                    for (var j = width - 1; j >= 0; j--) {
+                        //Apply selection sort
+                        if (block2D[i][j] != 0) {
+                            var marked = j;
+                            for (var k = marked - 1; k >= 0; k--) {
+                                //If the pair of block has different value, switch to the next pair
+                                if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])) {
+                                    marked = k;
+                                }
+                                //If same, merge value to the left
+                                else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
+                                    block2D[i][marked] += block2D[i][k];
+
+                                    //Delete the right hand side block
+                                    block2D[i][k] = 0;
+                                    j = k;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // process.stdout.write("Merge block: \n");
+                // printBoardSimple();
+            }
+
+            function moveUp() {
+                //Merging block first, pushing later
+                mergeUp();
+                for (var j = 0; j < width; j++) {
+                    for (var temp = 0; temp < height - 1; temp++) {
+                        for (var i = 0; i < height - 1; i++) {
+                            if (block2D[i][j] == 0) { //Skip value 0 at the last element      
+                                block2D[i][j] = block2D[i + 1][j];
+                                block2D[i + 1][j] = 0
+                            }
+                        }
+                    }
+                }
+
+                console.log("Move up:");
+                printBoardSimple();
+                display();
+                addBlock();
+            }
+
+            function mergeUp() {
+                for (var j = 0; j < width; j++) {
+                    for (var i = 0;
+                        (i < height - 1) && (block2D[i][j] != 0); i++) {
+                        //Apply selection sort
+                        var marked = i;
+                        for (var k = marked + 1; k < height; k++) {
+                            //If the pair of block has different value, switch to the next pair
+                            if (block2D[k][j] != 0 && (block2D[marked][j] != block2D[k][j])) {
+                                marked = k;
+                            }
+                            //If same, merge value to the left
+                            else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
+                                block2D[marked][j] += block2D[k][j];
+
+                                //Delete the right hand side block
+                                block2D[k][j] = 0;
+                                i = k;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // process.stdout.write("Merge up: \n");
+                // printBoardSimple();
+                display();
+            }
+
+            function moveDown() {
+                //Merging block first, pushing later
+                mergeDown();
+                for (var j = width - 1; j >= 0; j--) {
+                    for (var temp = height - 1; temp > 0; temp--) {
+                        for (var i = height - 1; i >= 1; i--) {
+                            if (block2D[i][j] == 0) { //Skip value 0 at the last element      
+                                block2D[i][j] = block2D[i - 1][j];
+                                block2D[i - 1][j] = 0;
+                            }
+                        }
+                    }
+                }
+
+                console.log("Move down:");
+                printBoardSimple();
+                display();
+                addBlock();
+            }
+
+            function mergeDown() {
+                for (var j = width - 1; j >= 0; j--) {
+                    for (var i = height - 1; i >= 0; i--) {
+                        //Apply selection sort
+                        if (block2D[i][j] != 0) {
+                            var marked = i;
+                            for (var k = marked - 1; k >= 0; k--) {
+                                //If the pair of block has different value, switch to the next pair
+                                if (block2D[k][j] != 0 && (block2D[marked][j] != block2D[k][j])) {
+                                    marked = k;
+                                }
+                                //If same, merge value to the left
+                                else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
+                                    block2D[marked][j] += block2D[k][j];
+
+                                    //Delete the right hand side block
+                                    block2D[k][j] = 0;
+                                    i = k;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // process.stdout.write("Merge block: \n");
+                // printBoardSimple();
+            }
+
+            reset();
+            //console.log("\nIteration 0------------------------------------------");
+            
+
+
+        </script>
+        <div>
+            <input type="button" name="reset" value="Reset" onclick="reset()">
+        </div>
+        <div>
+            <table id="gameDisplay">
+
+            </table>
+        </div>
+
+</html>

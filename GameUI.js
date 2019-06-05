@@ -18,9 +18,6 @@ for(var i = 0; i < height; i++){
     block2D[i] = new Array(width); 
 }        
 
-function undo(){
-    for (let i = 0; i < height;)
-}
 
 //Another way to create 2D array
 //var block2D = [...Array(height)].map(e => Array(width).fill(0));
@@ -77,6 +74,8 @@ function addBlock(){
     }
     else {
         block2D[randomY][randomX] = blockIncrement;    
+        undoStack.push(block2D)
+        console.log(undoStack)
         //console.log("PASSED");
     } 
 

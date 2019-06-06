@@ -53,25 +53,57 @@
                 }
             }
         }
-
+        
         function display() {
             var htmlCode = ""
-
+            
             for (let i = 0; i <= height - 1; i++) {
                 htmlCode += "<tr>"
                 for (let j = 0; j <= width - 1; j++) {
                     if (block2D[i][j] === 0) {
                         htmlCode += ("<td></td>")
-                    } else {
-                        htmlCode += ("<td>" + block2D[i][j] + "</td>")
-                    }
+                    } 
+                    else if(block2D[i][j] === 2) {
+                            htmlCode += ("<td style=\"background-color: #FA5252\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 4) {
+                            htmlCode += ("<td style=\"background-color: #607BB0\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 8) {
+                            htmlCode += ("<td style=\"background-color: #9FE660\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 16) {
+                            htmlCode += ("<td style=\"background-color: #E6D960\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 32) {
+                            htmlCode += ("<td style=\"background-color: #C77070\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 64) {
+                            htmlCode += ("<td style=\"background-color: #4DA6FF\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 128) {
+                            htmlCode += ("<td style=\"background-color: #FF0000\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 256) {
+                            htmlCode += ("<td style=\"background-color: #967FF9\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 512) {
+                            htmlCode += ("<td style=\"background-color: #000080\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 1024) {
+                            htmlCode += ("<td style=\"background-color: #f3904f\">" + block2D[i][j] + "</td>")
+                        }
+                    else if(block2D[i][j] === 2048) {
+                            htmlCode += ("<td style=\"background-color: #8080ff\">" + block2D[i][j] + "</td>")
+                        }
 
                 }
                 htmlCode += "</tr>"
             }
-            document.getElementById("gameDisplay").innerHTML = htmlCode
-        }
 
+            document.getElementById("gameDisplay").innerHTML = htmlCode
+        } 
+        
         //Initialize array with all element is set to 0
         function reset() {
             console.log("RESET")

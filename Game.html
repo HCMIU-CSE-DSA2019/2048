@@ -7,7 +7,7 @@
         window.addEventListener("keyup", checkKeyPressed, false);
 
         //Board size
-        var width = 4
+        var width = 12
         var height = 4
 
         //Increment value
@@ -126,7 +126,6 @@
             return block2D[y][x] != 0
         }
 
-        //Bug: move all blocks by 1 unit instead of moving all to the edge.
         function moveLeft() {
             mergeLeft()
             //Merging block first, pushing later

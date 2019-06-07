@@ -15,14 +15,12 @@
 
         // Create an 2D array
         var block2D = new Array(height)
-        for (var i = 0; i < height; i++) {
+        for (let i = 0; i < height; i++) {
             block2D[i] = new Array(width)
         }
 
-        // Create an undo stack
+        // Create an undo and redo stack
         var undoStack = new Array()
-
-        // Create a redo stack
         var redoStack = new Array()
 
         function checkKeyPressed(e) {
@@ -53,67 +51,65 @@
                 }
             }
         }
-        
+
         function display() {
             var htmlCode = ""
-            
+
             for (let i = 0; i <= height - 1; i++) {
                 htmlCode += "<tr>"
                 for (let j = 0; j <= width - 1; j++) {
                     if (block2D[i][j] === 0) {
                         htmlCode += ("<td></td>")
-                    } 
-                    else if(block2D[i][j] === 2) {
-                            htmlCode += ("<td style=\"background-color: #FA5252\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 4) {
-                            htmlCode += ("<td style=\"background-color: #607BB0\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 8) {
-                            htmlCode += ("<td style=\"background-color: #9FE660\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 16) {
-                            htmlCode += ("<td style=\"background-color: #E6D960\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 32) {
-                            htmlCode += ("<td style=\"background-color: #C77070\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 64) {
-                            htmlCode += ("<td style=\"background-color: #4DA6FF\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 128) {
-                            htmlCode += ("<td style=\"background-color: #FF0000\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 256) {
-                            htmlCode += ("<td style=\"background-color: #967FF9\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 512) {
-                            htmlCode += ("<td style=\"background-color: #000080\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 1024) {
-                            htmlCode += ("<td style=\"background-color: #f3904f\">" + block2D[i][j] + "</td>")
-                        }
-                    else if(block2D[i][j] === 2048) {
-                            htmlCode += ("<td style=\"background-color: #8080ff\">" + block2D[i][j] + "</td>")
-                        }
+                    }
+                    else if (block2D[i][j] === 2) {
+                        htmlCode += ("<td style=\"background-color: #ff9c9c\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 4) {
+                        htmlCode += ("<td style=\"background-color: #f05a5a\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 8) {
+                        htmlCode += ("<td style=\"background-color: #ecb783\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 16) {
+                        htmlCode += ("<td style=\"background-color: #d88a3e\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 32) {
+                        htmlCode += ("<td style=\"background-color: #f3f098\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 64) {
+                        htmlCode += ("<td style=\"background-color: #d1cb1a\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 128) {
+                        htmlCode += ("<td style=\"background-color: #c59664\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 256) {
+                        htmlCode += ("<td style=\"background-color: #bc670d\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 512) {
+                        htmlCode += ("<td style=\"background-color: #83d1d4\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 1024) {
+                        htmlCode += ("<td style=\"background-color: #11b0aa\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 2048) {
+                        htmlCode += ("<td style=\"background-color: #84f08b\">" + block2D[i][j] + "</td>")
+                    }
 
                 }
                 htmlCode += "</tr>"
             }
 
             document.getElementById("gameDisplay").innerHTML = htmlCode
-        } 
-        
-        //Initialize array with all element is set to 0
+        }
+
+        //Initialize an array with all element is set to 0
         function reset() {
             console.log("RESET")
             for (let i = 0; i < height; i++) {
                 for (let j = 0; j < width; j++) {
                     block2D[i][j] = 0
-                    undoStack[i]
                 }
             }
-
             addBlock()
             addBlock()
         }
@@ -132,7 +128,43 @@
                 block2D[randomY][randomX] = blockIncrement
                 //console.log("PASSED");
             }
+            pushToStack()
+            display()
+        }
 
+        //push 2D array value to both undo and redo stack
+        function pushToStack() {
+            //Create a tempStack to store 2D array with its element value
+            var tempStack = []
+            
+            console.log("ADD TO STACK")
+            for (let i = 0; i < height; i++) {
+                tempStack[i] = new Array()
+                for (let j = 0; j < width; j++) {
+                    tempStack[i].push(block2D[i][j])
+                }
+            }
+            console.log(tempStack)
+            undoStack.push(tempStack)
+            redoStack.push(tempStack)
+        }
+
+        function undo() {
+            if (undoStack.length == 2){
+                alert("PLEASE STAAAAAP")
+                return
+            }
+            console.log("UNDO")
+            undoStack.pop()
+            block2D = undoStack[undoStack.length - 1]
+            display()
+        }
+
+        function redo() {
+            console.log("REDO")
+            block2D = redoStack[undoStack.length]
+            
+            undoStack.push(redoStack[undoStack.length + 1])
             display()
         }
 
@@ -178,26 +210,28 @@
 
         function mergeLeft() {
             for (var i = 0; i < height; i++) {
-                for (var j = 0;
-                    (j < width - 1) && (block2D[i][j] != 0); j++) {
-                    //Apply selection sort
-                    var marked = j
+                for (var j = 0; j < width - 1; j++) {
+                    if (block2D[i][j] != 0) {
+                        //Apply selection sort
+                        var marked = j
 
-                    for (var k = marked + 1; k < width; k++) {
-                        //If the pair of block has different value, switch to the next pair
-                        if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])) {
-                            marked = k
-                        }
-                        //If same, merge value to the left
-                        else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
-                            block2D[i][marked] += block2D[i][k]
+                        for (var k = marked + 1; k < width; k++) {
+                            //If the pair of block has different value, switch to the next pair
+                            if (block2D[i][k] != 0 && (block2D[i][marked] != block2D[i][k])) {
+                                marked = k
+                            }
+                            //If same, merge value to the left
+                            else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
+                                block2D[i][marked] += block2D[i][k]
 
-                            //Delete the right hand side block and move to the next pair
-                            block2D[i][k] = 0
-                            j = k
-                            break
+                                //Delete the right hand side block and move to the next pair
+                                block2D[i][k] = 0
+                                j = k
+                                break
+                            }
                         }
                     }
+
                 }
             }
             console.log("Merge block: \n")
@@ -271,22 +305,24 @@
 
         function mergeUp() {
             for (var j = 0; j < width; j++) {
-                for (var i = 0; (i < height - 1) && (block2D[i][j] != 0); i++) {
-                    //Apply selection sort
-                    var marked = i
-                    for (var k = marked + 1; k < height; k++) {
-                        //If the pair of block has different value, switch to the next pair
-                        if (block2D[k][j] != 0 && (block2D[marked][j] != block2D[k][j])) {
-                            marked = k
-                        }
-                        //If same, merge value to the left
-                        else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
-                            block2D[marked][j] += block2D[k][j]
+                for (var i = 0; i < height - 1; i++) {
+                    if (block2D[i][j] != 0) {
+                        //Apply selection sort
+                        var marked = i
+                        for (var k = marked + 1; k < height; k++) {
+                            //If the pair of block has different value, switch to the next pair
+                            if (block2D[k][j] != 0 && (block2D[marked][j] != block2D[k][j])) {
+                                marked = k
+                            }
+                            //If same, merge value to the left
+                            else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
+                                block2D[marked][j] += block2D[k][j]
 
-                            //Delete the right hand side block
-                            block2D[k][j] = 0
-                            i = k
-                            break
+                                //Delete the right hand side block
+                                block2D[k][j] = 0
+                                i = k
+                                break
+                            }
                         }
                     }
                 }
@@ -346,7 +382,7 @@
     </script>
 </head>
 
-<body>
+<body background="">
     <div align="center">
         <h1>2048</h1>
     </div>
@@ -361,9 +397,11 @@
 
     <div align="center" style="padding: 1%">
         <input type="button" id="reset" value="Reset" onclick="reset()">
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
     </div>
-    <div align="center">
-        <hr>
+    <div align="center" style="color: rgb(80, 79, 79);">
+        <br>
         <h3>How to play</h3>
         <p>
             Use W, A, S, D or UP, DOWN, LEFT, RIGHT button to move the blocks

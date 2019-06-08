@@ -1,5 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
+    background-image: url("https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.15752-9/61653455_616536892192924_6075879324987162624_n.jpg?_nc_cat=111&_nc_eui2=AeHG46NkQooNRhbRWmGuSJsYzbkk-PQe-N-BhPU1gRO5itP0fIfFHAtnDQPaE7PINUHfAlTOqxuwWFu4-eUhFXDuMimI5F7n0k4hJ7WurnKEvQ&_nc_oc=AQlT6TE1_pXUNqwbl6y6xWliuWK92BkRSNCE9FDbTolAtd5Dya-gbncOFwTHpUu35Sg&_nc_ht=scontent.fsgn5-3.fna&oh=beb43f16737831b219d38d56df3d0fb9&oe=5D962F2C");
+    background-size: cover;
 }
 
 table {
@@ -7,9 +9,11 @@ table {
 }
 
 table, td, th {
-    border: 5px solid rgb(241, 236, 228);
+    color: rgb(66, 64, 64);
+    border: 10px solid #686560;
     padding: 0%;
     font-size: 150%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
 }
 
@@ -20,9 +24,22 @@ input {
 }
 
 button {
+    border: none;
     width: 100px;
     height: 50px;
     font-size: 120%;
+    -webkit-transition-duration: 0.3s;
+    outline: none;
+    background-color: rgb(163, 243, 152);
+    /* Safari */
+    transition-duration: 0.4s;
+}
+
+button:hover {
+    /* Green */
+    color: white;
+    background-color: rgb(49, 133, 52);
+    cursor: pointer;
 }
 
 td {

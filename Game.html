@@ -24,9 +24,9 @@
         var redoStack = new Array()
 
         function checkKeyPressed(e) {
-            if (isLose()) {
-                alert("YOU LOSE")
-            }
+            // if (isLose()) {
+            //     alert("YOU LOSE")
+            // }
             switch (e.keyCode) {
                 case 65:
                 case 37: {
@@ -54,56 +54,6 @@
                 }
             }
             updateScore()
-        }
-
-        function display() {
-            var htmlCode = ""
-
-            for (let i = 0; i <= height - 1; i++) {
-                htmlCode += "<tr>"
-                for (let j = 0; j <= width - 1; j++) {
-                    if (block2D[i][j] === 0) {
-                        htmlCode += ("<td style=\"background-color: #e0dbd2\"></td>")
-                    }
-                    else if (block2D[i][j] === 2) {
-                        htmlCode += ("<td style=\"background-color: #ff9c9c\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 4) {
-                        htmlCode += ("<td style=\"background-color: #f05a5a\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 8) {
-                        htmlCode += ("<td style=\"background-color: #ecb783\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 16) {
-                        htmlCode += ("<td style=\"background-color: #d88a3e\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 32) {
-                        htmlCode += ("<td style=\"background-color: #f3f098\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 64) {
-                        htmlCode += ("<td style=\"background-color: #d1cb1a\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 128) {
-                        htmlCode += ("<td style=\"background-color: #c59664\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 256) {
-                        htmlCode += ("<td style=\"background-color: #bc670d\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 512) {
-                        htmlCode += ("<td style=\"background-color: #83d1d4\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 1024) {
-                        htmlCode += ("<td style=\"background-color: #11b0aa\">" + block2D[i][j] + "</td>")
-                    }
-                    else if (block2D[i][j] === 2048) {
-                        htmlCode += ("<td style=\"background-color: #84f08b\">" + block2D[i][j] + "</td>")
-                    }
-
-                }
-                htmlCode += "</tr>"
-            }
-
-            document.getElementById("gameDisplay").innerHTML = htmlCode
         }
 
         //Initialize an array with all element is set to 0
@@ -410,6 +360,56 @@
 
             console.log("Merge down")
         }
+
+        function display() {
+            var htmlCode = ""
+
+            for (let i = 0; i <= height - 1; i++) {
+                htmlCode += "<tr>"
+                for (let j = 0; j <= width - 1; j++) {
+                    if (block2D[i][j] === 0) {
+                        htmlCode += ("<td style=\"background-color: #e0dbd2\"></td>")
+                    }
+                    else if (block2D[i][j] === 2) {
+                        htmlCode += ("<td style=\"background-color: #ff9c9c\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 4) {
+                        htmlCode += ("<td style=\"background-color: #f05a5a\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 8) {
+                        htmlCode += ("<td style=\"background-color: #ecb783\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 16) {
+                        htmlCode += ("<td style=\"background-color: #d88a3e\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 32) {
+                        htmlCode += ("<td style=\"background-color: #f3f098\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 64) {
+                        htmlCode += ("<td style=\"background-color: #d1cb1a\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 128) {
+                        htmlCode += ("<td style=\"background-color: #c59664\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 256) {
+                        htmlCode += ("<td style=\"background-color: #bc670d\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 512) {
+                        htmlCode += ("<td style=\"background-color: #83d1d4\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 1024) {
+                        htmlCode += ("<td style=\"background-color: #11b0aa\">" + block2D[i][j] + "</td>")
+                    }
+                    else if (block2D[i][j] === 2048) {
+                        htmlCode += ("<td style=\"background-color: #84f08b\">" + block2D[i][j] + "</td>")
+                    }
+
+                }
+                htmlCode += "</tr>"
+            }
+
+            document.getElementById("gameDisplay").innerHTML = htmlCode
+        }
     </script>
 </head>
 
@@ -425,20 +425,11 @@
             </script>
         </table>
     </div>
+    
     <div align="center" style="padding: 1%">
-        <input type="button" id="reset" value="Reset" onclick="reset()">
+        <button onclick="reset()">Reset</button>
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
-    </div>
-    <div align="center" style="color: rgb(80, 79, 79);">
-        <br>
-        <h3>Credit</h3>
-        <p>
-            Do Thai Anh Huy <br>
-            Tang Minh Khoi <br>
-            Le Gia Vy <br>
-            Nhu Dinh Nam <br>
-        </p>
     </div>
 </body>
 

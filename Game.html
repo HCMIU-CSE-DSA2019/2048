@@ -24,6 +24,9 @@
         var redoStack = new Array()
 
         function checkKeyPressed(e) {
+            if (isLose()) {
+                alert("YOU LOSE")
+            }
             switch (e.keyCode) {
                 case 65:
                 case 37: {
@@ -50,6 +53,7 @@
                     break
                 }
             }
+            updateScore()
         }
 
         function display() {
@@ -105,38 +109,50 @@
         //Initialize an array with all element is set to 0
         function reset() {
             console.log("RESET")
+
+            //Delete and create a new stack
+            undoStack = null
+            undoStack = new Array()
+            redoStack = null
+            redoStack = new Array()
+
             for (let i = 0; i < height; i++) {
                 for (let j = 0; j < width; j++) {
                     block2D[i][j] = 0
                 }
             }
+            totalScore = 0
+
             addBlock()
             addBlock()
         }
 
         //Add random block
         function addBlock() {
-            //Random from a specific range: (random * (max - min  + 1)) + min
-            var randomX = Math.floor((Math.random() * width) + 0) //Range from 0 to width size. Eg: width = 4: 0 to 3
-            var randomY = Math.floor((Math.random() * height) + 0)
+            if (isAvailableBlock()) {
+                //Random from a specific range: (random * (max - min  + 1)) + min
+                var randomX = Math.floor((Math.random() * width) + 0) //Range from 0 to width size. Eg: width = 4: 0 to 3
+                var randomY = Math.floor((Math.random() * height) + 0)
 
-            if (isDuplicateBlock(randomX, randomY)) {
-                //console.log("DUPLICATED, add again");
-                addBlock()
-                return
-            } else {
-                block2D[randomY][randomX] = blockIncrement
-                //console.log("PASSED");
+                if (isDuplicateBlock(randomX, randomY)) {
+                    //console.log("DUPLICATED, add again");
+                    addBlock()
+                    return
+                } else {
+                    totalScore += blockIncrement
+                    block2D[randomY][randomX] = blockIncrement
+                    //console.log("PASSED");
+                }
+                pushToStack()
+                display()
             }
-            pushToStack()
-            display()
         }
 
         //push 2D array value to both undo and redo stack
         function pushToStack() {
             //Create a tempStack to store 2D array with its element value
             var tempStack = []
-            
+
             console.log("ADD TO STACK")
             for (let i = 0; i < height; i++) {
                 tempStack[i] = new Array()
@@ -150,7 +166,7 @@
         }
 
         function undo() {
-            if (undoStack.length == 2){
+            if (undoStack.length == 2) {
                 alert("PLEASE STAAAAAP")
                 return
             }
@@ -161,15 +177,18 @@
         }
 
         function redo() {
-            console.log("REDO")
-            block2D = redoStack[undoStack.length]
-            
-            undoStack.push(redoStack[undoStack.length + 1])
-            display()
+            if (redoStack[undoStack.length] != null) {
+                console.log("REDO")
+                block2D = redoStack[undoStack.length]
+
+                undoStack.push(redoStack[undoStack.length + 1])
+                display()
+            }
+
         }
 
         //Lose condition
-        function isFullBlock() {
+        function isLose() {
             for (var i = 0; i < height; i++) {
                 for (var j = 0; j < width; j++) {
                     if (block2D[i][j] == 0) { //Empty block
@@ -183,7 +202,19 @@
                     }
                 }
             }
+            reset()
             return true
+        }
+
+        function isAvailableBlock() {
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
+                    if (block2D[i][j] == 0) {
+                        return true
+                    }
+                }
+            }
+            return false
         }
 
         function isDuplicateBlock(x, y) {
@@ -382,7 +413,7 @@
     </script>
 </head>
 
-<body background="">
+<body background="https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.15752-9/62019592_662199244223524_9001078651466285056_n.jpg?_nc_cat=102&_nc_eui2=AeECFrJzc8vpmu2lbJiNtYvPVSLXwK5uvpfYZXk6BSB415YOy5rwzwBtV7bJ3s6d4ujkTwjNsVmTugLfp_JDTamohR_A9aNSLZN4-E8jQb9L7A&_nc_oc=AQn6a64DDBW0yIPaA77jS5E_Jptk_ksY31ZAfwxIsPBkUTk-DTYJBCRkW1VuetSqK-4&_nc_ht=scontent.fsgn2-2.fna&oh=dbdad11eda445060ff847cc37c356b1a&oe=5D829C34">
     <div align="center">
         <h1>2048</h1>
     </div>
@@ -394,7 +425,9 @@
             </script>
         </table>
     </div>
-
+    <!-- <div align="center" id="score-container" style="padding: 1%">
+        Score: 0
+    </div> -->
     <div align="center" style="padding: 1%">
         <input type="button" id="reset" value="Reset" onclick="reset()">
         <button onclick="undo()">Undo</button>

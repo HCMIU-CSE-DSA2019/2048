@@ -63,7 +63,7 @@
                 htmlCode += "<tr>"
                 for (let j = 0; j <= width - 1; j++) {
                     if (block2D[i][j] === 0) {
-                        htmlCode += ("<td></td>")
+                        htmlCode += ("<td style=\"background-color: #e0dbd2\"></td>")
                     }
                     else if (block2D[i][j] === 2) {
                         htmlCode += ("<td style=\"background-color: #ff9c9c\">" + block2D[i][j] + "</td>")
@@ -425,20 +425,12 @@
             </script>
         </table>
     </div>
-    <!-- <div align="center" id="score-container" style="padding: 1%">
-        Score: 0
-    </div> -->
     <div align="center" style="padding: 1%">
         <input type="button" id="reset" value="Reset" onclick="reset()">
         <button onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
     </div>
     <div align="center" style="color: rgb(80, 79, 79);">
-        <br>
-        <h3>How to play</h3>
-        <p>
-            Use W, A, S, D or UP, DOWN, LEFT, RIGHT button to move the blocks
-        </p>
         <br>
         <h3>Credit</h3>
         <p>

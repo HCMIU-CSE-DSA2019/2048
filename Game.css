@@ -7,9 +7,11 @@ table {
 }
 
 table, td, th {
-    border: 5px solid rgb(241, 236, 228);
+    color: rgb(66, 64, 64);
+    border: 10px solid #686560;
     padding: 0%;
     font-size: 150%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
 }
 

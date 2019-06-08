@@ -1,5 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
+    background-image: url("https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.15752-9/62019592_662199244223524_9001078651466285056_n.jpg?_nc_cat=102&_nc_eui2=AeECFrJzc8vpmu2lbJiNtYvPVSLXwK5uvpfYZXk6BSB415YOy5rwzwBtV7bJ3s6d4ujkTwjNsVmTugLfp_JDTamohR_A9aNSLZN4-E8jQb9L7A&_nc_oc=AQn6a64DDBW0yIPaA77jS5E_Jptk_ksY31ZAfwxIsPBkUTk-DTYJBCRkW1VuetSqK-4&_nc_ht=scontent.fsgn2-2.fna&oh=dbdad11eda445060ff847cc37c356b1a&oe=5D829C34");
+    background-size: cover;
 }
 
 table {

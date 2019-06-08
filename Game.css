@@ -17,6 +17,11 @@ table, td, th {
     text-align: center;
 }
 
+#score-container {
+    color: rgb(66, 64, 64);
+    font-size: 200%;
+}
+
 input {
     width: 100px;
     height: 50px;
@@ -28,21 +33,28 @@ button {
     width: 100px;
     height: 50px;
     font-size: 120%;
+    opacity: 0.5;
     -webkit-transition-duration: 0.3s;
     outline: none;
-    background-color: rgb(163, 243, 152);
     /* Safari */
     transition-duration: 0.4s;
 }
 
 button:hover {
     /* Green */
+    opacity: 1;
     color: white;
-    background-color: rgb(49, 133, 52);
     cursor: pointer;
 }
 
 td {
     width: 100px;
     height: 100px;
+    transition-duration: 0.3s;
+}
+
+td:hover{
+    color: white;
+    background-color: rgb(58, 57, 57) !important;
+    transition-duration: 0.3s;
 }

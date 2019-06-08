@@ -13,6 +13,9 @@
         //Increment value
         var blockIncrement = 2
 
+        // Game score
+        var score = 0
+
         // Create an 2D array
         var block2D = new Array(height)
         for (let i = 0; i < height; i++) {
@@ -24,9 +27,6 @@
         var redoStack = new Array()
 
         function checkKeyPressed(e) {
-            // if (isLose()) {
-            //     alert("YOU LOSE")
-            // }
             switch (e.keyCode) {
                 case 65:
                 case 37: {
@@ -71,10 +71,11 @@
                     block2D[i][j] = 0
                 }
             }
-            totalScore = 0
-
             addBlock()
             addBlock()
+        
+            score = 0
+            updateScore()
         }
 
         //Add random block
@@ -89,7 +90,6 @@
                     addBlock()
                     return
                 } else {
-                    totalScore += blockIncrement
                     block2D[randomY][randomX] = blockIncrement
                     //console.log("PASSED");
                 }
@@ -124,6 +124,9 @@
             undoStack.pop()
             block2D = undoStack[undoStack.length - 1]
             display()
+
+            score -= 10
+            updateScore()
         }
 
         function redo() {
@@ -204,6 +207,7 @@
                             //If same, merge value to the left
                             else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
                                 block2D[i][marked] += block2D[i][k]
+                                score += 10
 
                                 //Delete the right hand side block and move to the next pair
                                 block2D[i][k] = 0
@@ -251,6 +255,7 @@
                             //If same, merge value to the left
                             else if (block2D[i][k] != 0 && (block2D[i][marked] == block2D[i][k])) {
                                 block2D[i][marked] += block2D[i][k]
+                                score += 10
 
                                 //Delete the right hand side block
                                 block2D[i][k] = 0
@@ -298,6 +303,7 @@
                             //If same, merge value to the left
                             else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
                                 block2D[marked][j] += block2D[k][j]
+                                score += 10
 
                                 //Delete the right hand side block
                                 block2D[k][j] = 0
@@ -347,6 +353,7 @@
                             //If same, merge value to the left
                             else if (block2D[k][j] != 0 && (block2D[marked][j] == block2D[k][j])) {
                                 block2D[marked][j] += block2D[k][j]
+                                score += 10
 
                                 //Delete the right hand side block
                                 block2D[k][j] = 0
@@ -400,7 +407,7 @@
                     else if (block2D[i][j] === 1024) {
                         htmlCode += ("<td style=\"background-color: #11b0aa\">" + block2D[i][j] + "</td>")
                     }
-                    else if (block2D[i][j] === 2048) {
+                    else {
                         htmlCode += ("<td style=\"background-color: #84f08b\">" + block2D[i][j] + "</td>")
                     }
 
@@ -410,26 +417,28 @@
 
             document.getElementById("gameDisplay").innerHTML = htmlCode
         }
+    
+        function updateScore() {
+            document.getElementById("score-container").innerHTML = "Score: " + score
+        }
     </script>
 </head>
 
-<body background="">
-    <div align="center">
-        <h1>2048</h1>
-    </div>
-
-    <div align="center">
+<body>
+    <div align="center" style="padding: 5% 0% 0% 0%;">
         <table id="gameDisplay">
             <script>
                 reset()
             </script>
         </table>
     </div>
-    
+    <div align="center" id="score-container" style="padding: 1%">
+        Score: 0
+    </div>
     <div align="center" style="padding: 1%">
-        <button onclick="reset()">Reset</button>
-        <button onclick="undo()">Undo</button>
-        <button onclick="redo()">Redo</button>
+        <button style="background: url(undoButton.png)" onclick="undo()"></button>
+        <button style="background: url(resetButton.png)" onclick="reset()"></button>
+        <button style="background: url(redoButton.png)" onclick="redo()"></button>
     </div>
 </body>
 
